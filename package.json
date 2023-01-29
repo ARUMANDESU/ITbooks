@@ -23,7 +23,8 @@
     "nodemailer": "^6.9.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
-    "swagger-ui-express": "^4.6.0"
+    "swagger-ui-express": "^4.6.0",
+    "timers": "^0.1.1"
   },
   "prettier": {
     "tabWidth": 4
