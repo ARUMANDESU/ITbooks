@@ -5,6 +5,7 @@ const { response } = require("express");
 
 class bookController {
     async getBooksHandler(req, res) {
+        req.query.limit = 100;
         await Book.find({})
             .limit(parseInt(req.query.limit))
             .then((books) => {
@@ -13,13 +14,13 @@ class bookController {
     }
 
     async getBookByIDHandler(req, res) {
-        await Book.findById(req.params.id, (err, book) => {
-            if (err) {
-                res.status(404).send("Book not found");
-            } else {
+        await Book.findOne({ _id: req.params.id })
+            .then((book) => {
                 res.json(book);
-            }
-        });
+            })
+            .catch((e) => {
+                console.error(e);
+            });
     }
 
     async insertBookHandler(req, res) {
@@ -94,6 +95,9 @@ class bookController {
         } catch (e) {
             console.log(e);
         }
+    }
+    async parseBook(req, res) {
+        const id = req.params.id;
     }
 }
 module.exports = new bookController();

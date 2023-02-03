@@ -10,7 +10,7 @@ class userController {
             const user_name = req.params.username;
             await User.find({ username: user_name })
                 .then((user) => {
-                    res.json(user);
+                    res.json(userOutput(user));
                 })
                 .catch((e) => {
                     console.log(e);
@@ -70,7 +70,9 @@ class userController {
                     .json({ message: "Введен неверный пароль" });
             }
             const token = generateAccessToken(user._id, user.roles);
-            return res.json({ token });
+
+            res.header("Authorization", `Bearer ${token}`);
+            return res.json(userOutput(user));
         } catch (e) {
             console.log(e);
             res.status(400).json({ message: "Error" });
@@ -100,6 +102,11 @@ class userController {
             res.status(400).json({ message: "Error" });
         }
     }
+}
+
+function userOutput(user) {
+    const { _id, username, email, roles, favorites } = user;
+    return { _id, username, email, roles, favorites };
 }
 
 module.exports = new userController();
