@@ -158,7 +158,7 @@ class bookController {
             const payload = req.body.payload.trim();
             const books = await Book.find({
                 title: { $regex: new RegExp("^" + payload + ".*", "i") },
-            });
+            }).limit(15);
 
             res.json(books);
         } catch (e) {
