@@ -23,7 +23,6 @@ class userController {
     async registerUserHandler(req, res) {
         try {
             let user = req.body;
-
             bcrypt
                 .hash(user.password, 11)
                 .then(async (hash) => {

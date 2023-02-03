@@ -153,5 +153,17 @@ class bookController {
             }
         );
     }
+    async search(req, res) {
+        try {
+            const payload = req.body.payload.trim();
+            const books = await Book.find({
+                title: { $regex: new RegExp("^" + payload + ".*", "i") },
+            });
+
+            res.json(books);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 module.exports = new bookController();

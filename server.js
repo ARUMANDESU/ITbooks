@@ -12,7 +12,7 @@ dotenv.config();
 mongoose.set("strictQuery", false);
 app.use(
     cors({
-        origin: process.env.FRONT_URL,
+        origin: ["http://localhost:3000", "*"],
         credentials: true,
     })
 );
