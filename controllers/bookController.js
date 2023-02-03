@@ -1,6 +1,5 @@
 const Book = require("../models/book");
 const axios = require("axios");
-const { setTimeout } = require("timers/promises");
 const { response } = require("express");
 const { parseBookHtml } = require("../utils/bookParser");
 
@@ -97,13 +96,62 @@ class bookController {
             console.log(e);
         }
     }
-    parseBook(req, res) {
-        const isbn = req.params.isbn;
-        const url = `https://itbook.store/books/${isbn}`;
-        parseBookHtml(url).then((result) => {
-            console.log(result);
-            res.json(result);
-        });
+    async parseBook(req, res) {
+        try {
+            const books = await Book.find({
+                description: { $exists: false },
+            });
+
+            const promises = books.map(async (book) => {
+                const url = `https://itbook.store/books/${book.ISBN}`;
+
+                const result = await parseBookHtml(url);
+                result.ISBN = book.ISBN;
+                console.log(result);
+                await Book.findOneAndUpdate(
+                    { ISBN: book.ISBN },
+                    { $set: result }
+                );
+            });
+            await Promise.all(promises);
+            res.json(books);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async deleteDuplicatedDocs() {
+        await Book.aggregate(
+            [
+                {
+                    $group: {
+                        _id: "$ISBN",
+                        uniqueIds: { $addToSet: "$_id" },
+                        count: { $sum: 1 },
+                    },
+                },
+                {
+                    $match: {
+                        count: { $gt: 1 },
+                    },
+                },
+            ],
+            function (err, results) {
+                results.forEach(function (result) {
+                    result.uniqueIds.shift();
+                    Book.deleteMany(
+                        { _id: { $in: result.uniqueIds } },
+                        function (err) {
+                            console.log(
+                                "Deleted duplicated ISBN: ",
+                                result._id
+                            );
+                        }
+                    );
+                });
+            }
+        );
     }
 }
 module.exports = new bookController();

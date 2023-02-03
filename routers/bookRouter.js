@@ -1,11 +1,11 @@
 const express = require("express");
 const bookController = require("../controllers/bookController");
+const { roleMiddleware } = require("../services/middlewares");
 const router = express.Router();
 
 router.get("/", bookController.getBooksHandler);
-
+router.get("/parse", roleMiddleware(["admin"]), bookController.parseBook);
 router.get("/:id", bookController.getBookByIDHandler);
-router.get("/parse/:isbn", bookController.parseBook);
 
 router.patch("/:id", bookController.updateBookHandler);
 router.delete("/:id", bookController.deleteBookHandler);
