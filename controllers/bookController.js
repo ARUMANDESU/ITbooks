@@ -2,6 +2,7 @@ const Book = require("../models/book");
 const axios = require("axios");
 const { setTimeout } = require("timers/promises");
 const { response } = require("express");
+const { parseBookHtml } = require("../utils/bookParser");
 
 class bookController {
     async getBooksHandler(req, res) {
@@ -96,8 +97,13 @@ class bookController {
             console.log(e);
         }
     }
-    async parseBook(req, res) {
-        const id = req.params.id;
+    parseBook(req, res) {
+        const isbn = req.params.isbn;
+        const url = `https://itbook.store/books/${isbn}`;
+        parseBookHtml(url).then((result) => {
+            console.log(result);
+            res.json(result);
+        });
     }
 }
 module.exports = new bookController();

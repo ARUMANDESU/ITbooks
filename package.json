@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^1.2.4",
     "bcrypt": "^5.1.0",
+    "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
@@ -19,10 +20,12 @@
     "g": "^2.0.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.4",
+    "needle": "^3.2.0",
     "node-input-validator": "^4.5.1",
     "nodemailer": "^6.9.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
+    "request-promise": "^4.2.6",
     "swagger-ui-express": "^4.6.0",
     "timers": "^0.1.1"
   },
