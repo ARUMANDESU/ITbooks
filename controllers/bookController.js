@@ -5,9 +5,16 @@ const { parseBookHtml } = require("../utils/bookParser");
 
 class bookController {
     async getBooksHandler(req, res) {
-        req.query.limit = 100;
-        await Book.find({})
-            .limit(parseInt(req.query.limit))
+        let limit = parseInt(req.query.limit) || 100;
+        let skip = parseInt(req.query.page) || 0;
+        skip *= limit;
+
+        delete req.query.limit;
+        delete req.query.page;
+
+        await Book.find(req.query)
+            .limit(limit)
+            .skip(skip)
             .then((books) => {
                 res.json(books);
             });

@@ -12,7 +12,7 @@ dotenv.config();
 mongoose.set("strictQuery", false);
 app.use(
     cors({
-        origin: ["http://localhost:3000", "*"],
+        origin: "*",
         credentials: true,
     })
 );
@@ -24,5 +24,4 @@ mongoose
     .connect(process.env.DB_URL)
     .then((res) => console.log("Connected to DB"))
     .catch((error) => console.log(error));
-
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
